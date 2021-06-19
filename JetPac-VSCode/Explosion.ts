@@ -31,4 +31,4 @@ class Explosion extends Base {
     }
 }
 
-export = Explosion;   
+export = Explosion;

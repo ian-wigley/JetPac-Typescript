@@ -89,8 +89,8 @@ class JetPac {
     public ledge3X: number = 490;
     public ledge3Y: number = 136;
 
-    private explosionWidth: number = 64;
-    private explosionHeight: number = 64;
+//    private explosionWidth: number = 64;
+//    private explosionHeight: number = 64;
 
     private onFloor: boolean = false;
     private onGround: boolean = false;
@@ -113,8 +113,8 @@ class JetPac {
 
     private m_ctrl: Controls = new Controls();
 
-    constructor() {
-    }
+    // constructor() {
+    // }
 
     private rect(x: number, y: number, w: number, h: number): void {
         this.ctx.beginPath();
@@ -339,8 +339,8 @@ class JetPac {
                 this.part[j].UpdateParticle(this.x, this.y, this.facingLeft, this.showParticles);
             }
 
-            for (var j = 0; j < this.stars.length; j++) {
-                this.stars[j].Update();
+            for (var k = 0; k < this.stars.length; k++) {
+                this.stars[k].Update();
             }
 
             for (var j = 0; j < this.meteors.length; j++) {
@@ -414,7 +414,7 @@ class JetPac {
             if (mainSpritesRect.Intersects(this.floorRect)) {
                 this.onGround = true;
                 this.y -= 1;
-                if (this.tripSwitch == false) {
+                if (!this.tripSwitch) {
                     this.currentFrame += 1;
                     this.tripSwitch = true;
                 }
@@ -427,7 +427,7 @@ class JetPac {
                     mainSpritesRect.Height == this.ledge1Rect.Top) {
                     this.onGround = true;
                     this.y -= 1;
-                    if (this.tripSwitch == false) {
+                    if (!this.tripSwitch) {
                         this.currentFrame += 1;
                         this.tripSwitch = true;
                     }
@@ -450,7 +450,7 @@ class JetPac {
                     mainSpritesRect.Height == this.ledge2Rect.Top) {
                     this.onGround = true;
                     this.y -= 1;
-                    if (this.tripSwitch == false) {
+                    if (!this.tripSwitch) {
                         this.currentFrame += 1;
                         this.tripSwitch = true;
                     }
@@ -473,7 +473,7 @@ class JetPac {
                     mainSpritesRect.Height == this.ledge3Rect.Top) {
                     this.onGround = true;
                     this.y -= 1;
-                    if (this.tripSwitch == false) {
+                    if (!this.tripSwitch) {
                         this.currentFrame += 1;
                         this.tripSwitch = true;
                     }
@@ -489,11 +489,11 @@ class JetPac {
                 }
             }
 
-            if (mainSpritesRect.Intersects(collectRocketRect2) && this.deliveredFirstPiece == false) {
+            if (mainSpritesRect.Intersects(collectRocketRect2) && !this.deliveredFirstPiece) {
                 this.pickedUpFirstPiece = true;
             }
 
-            if (mainSpritesRect.Intersects(collectRocketRect3) && this.getNextPiece == true) {
+            if (mainSpritesRect.Intersects(collectRocketRect3) && this.getNextPiece) {
                 this.pickedUpSecondPiece = true;
             }
 
@@ -622,7 +622,7 @@ class JetPac {
             }
         }
 
-        if (this.lowerFirstPiece == true && this.rocket2Y <= 384 && this.rocketAssembled == false) {
+        if (this.lowerFirstPiece && this.rocket2Y <= 384 && !this.rocketAssembled) {
             this.rocket2Y++;
             if (this.rocket2Y == 384) {
                 this.score += 100;
@@ -630,7 +630,7 @@ class JetPac {
             }
         }
 
-        if (this.pickedUpSecondPiece == true) {
+        if (this.pickedUpSecondPiece) {
             if (this.x != 422) {
                 this.rocket3X = this.x;
                 this.rocket3Y = this.y;
@@ -642,7 +642,7 @@ class JetPac {
                 this.getNextPiece = false;
             }
         }
-        if (this.deliveredSecondPiece == true && this.rocket3Y <= 326 && this.rocketAssembled == false) {
+        if (this.deliveredSecondPiece && this.rocket3Y <= 326 && !this.rocketAssembled) {
             this.rocket3Y++;
             if (this.rocket3Y == 326)
             {
@@ -650,7 +650,7 @@ class JetPac {
                 this.rocketAssembled = true;
             }
         }
-        if (this.rocketAssembled == true && this.fullTank == true && this.rocket1Y > -100) {
+        if (this.rocketAssembled && this.fullTank && this.rocket1Y > -100) {
             this.x = -150;
             this.y = -150;
             this.rocket3Y -= 2;

@@ -49,4 +49,4 @@ class Bonus extends Base {
     }
 }
 
-export = Bonus; 
+export = Bonus;

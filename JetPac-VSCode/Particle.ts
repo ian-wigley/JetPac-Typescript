@@ -5,11 +5,11 @@ class Particle extends Base {
     lifeSpan: number = 20;
     record: number = 0;
     recordRocket: number = 0;
-    count:number = 0;
+    count: number = 0;
     depth: number = 1.0;
     scale_x: number;
     scale_y: number;
-    fullTank:boolean = false;
+    fullTank: boolean = false;
 
     constructor(texture: HTMLImageElement) {
         super(texture);
@@ -77,14 +77,14 @@ class Particle extends Base {
     }
 
     public DrawParticle(ctx: CanvasRenderingContext2D, takeOff: boolean): void {
-        if (takeOff) {
+        if (takeOff) { // TODO include the particle drawing.
         }
         else {
-           ctx.drawImage(this.m_texture, 0, 0, this.m_width, this.m_height, this.m_x, this.m_y, this.scale_x, this.scale_y);
+            ctx.drawImage(this.m_texture, 0, 0, this.m_width, this.m_height, this.m_x, this.m_y, this.scale_x, this.scale_y);
 
-           if (this.scale_x < 0) {
-               this.scale_x = 0;
-           }
+            if (this.scale_x < 0) {
+                this.scale_x = 0;
+            }
 
             ctx.fillStyle = "#FF0000";
             ctx.beginPath();
@@ -94,4 +94,4 @@ class Particle extends Base {
     }
 }
 
-export = Particle;  
+export = Particle;

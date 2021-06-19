@@ -88,4 +88,4 @@ class Meteor extends Base {
     }
 }
 
-export = Meteor; 
+export = Meteor;
