@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript Jetpac</title>
+    <style>
+
+        * {cursor: none;}
+
+        body {
+            background-color: black;
+        }
+
+        #container {
+            width: 800px;
+            height: 600px;
+            border: 0px black;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        #canvas {
+            border: 0px black;
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+
+    <audio id="fired" src="sounds/fire.mp3" style="display: none;" />
+    <audio id="collision" src="sounds/hit.mp3" style="display: none;" />
+    <audio id="destroyed" src="sounds/died.mp3" style="display: none;" />
+
+    <img id="bonus" src="images/bonus.png" style="display: none;" />
+    <img id="bullet" src="images/bullet.PNG" style="display: none;" />
+    <img id="explosion" src="images/explosion.png" style="display: none;" />
+    <img id="floor" src="images/floor.PNG" style="display: none;" />
+    <img id="fuel_cell" src="images/fuel_cell.PNG" style="display: none;" />
+    <img id="ledge1" src="images/ledge1.PNG" style="display: none;" />
+    <img id="ledge2" src="images/ledge2.PNG" style="display: none;" />
+    <img id="loading" src="images/loading.PNG" style="display: none;" />
+    <img id="meteor" src="images/meteor.png" style="display: none;" />
+    <img id="particle" src="images/particle.png" style="display: none;" />
+    <img id="rocket_sprites" src="images/rocket_sprites.png" style="display: none;" />
+    <img id="sprites" src="images/sprites.png" style="display: none;" />
+
+    <script data-main="out/main.js" src="out/require.js"></script>
+
+</body>
+</html>
