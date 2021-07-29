@@ -43,12 +43,11 @@
     Intersects(rect: Rectangle) {
         var t: Rectangle = this.FromLTRB(this.Left, this.Top, this.Right, this.Bottom);
         var f: Rectangle = this.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
-        var result1 = (t.Left < f.Right &&
+
+        return t.Left < f.Right &&
             t.Right > f.Left &&
             t.Top < f.Bottom &&
-            t.Bottom > f.Top);
-
-        return result1;
+            t.Bottom > f.Top;
     }
 
     private FromLTRB(left: number, top: number, right: number, bottom: number) {

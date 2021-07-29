@@ -41,7 +41,6 @@ class JetPac {
 
     private fuelCell: Fuel;
     private extras: Bonus;
-    private explode: Explosion;
 
     private score: number = 0;
     private lives: number = 3;
@@ -51,14 +50,10 @@ class JetPac {
 
     private fuelLevel: number = 0;
 
-    private explosionX: number = -100;
-    private explosionY: number = 0;
-    private explosionFrame: number = 0;
     private x: number = 150;
     private y: number = 300;
 
     private facingLeft: boolean = false;
-    private bulletFired: boolean = false;
     private gameOn: boolean = false;
     private tripSwitch: boolean = false;
 
@@ -89,9 +84,6 @@ class JetPac {
     public ledge3X: number = 490;
     public ledge3Y: number = 136;
 
-//    private explosionWidth: number = 64;
-//    private explosionHeight: number = 64;
-
     private onFloor: boolean = false;
     private onGround: boolean = false;
     private showParticles: boolean = false;
@@ -102,7 +94,7 @@ class JetPac {
     private lowerFirstPiece: boolean = false;
     private rocketAssembled: boolean = false;
     private fullTank: boolean = false;
-    private alienReset: boolean = false;
+ //   private alienReset: boolean = false;
     private getNextPiece: boolean = false;
     private fired: boolean = false;
 
@@ -113,8 +105,8 @@ class JetPac {
 
     private m_ctrl: Controls = new Controls();
 
-    // constructor() {
-    // }
+    constructor() {
+    }
 
     private rect(x: number, y: number, w: number, h: number): void {
         this.ctx.beginPath();
@@ -182,11 +174,10 @@ class JetPac {
         this.explosionList = new Array<Explosion>();
 
         this.AddHitListener(this.canvas);
-        setInterval(() => this.Update(), 13);
+        this.Update()
     }
 
-
-    AddHitListener(element: HTMLElement) {
+    private AddHitListener(element: HTMLElement) {
         window.addEventListener("keydown", (event) => {
             this.onKeyPress(event);
             return null;
@@ -339,8 +330,8 @@ class JetPac {
                 this.part[j].UpdateParticle(this.x, this.y, this.facingLeft, this.showParticles);
             }
 
-            for (var k = 0; k < this.stars.length; k++) {
-                this.stars[k].Update();
+            for (var j = 0; j < this.stars.length; j++) {
+                this.stars[j].Update();
             }
 
             for (var j = 0; j < this.meteors.length; j++) {
@@ -508,6 +499,7 @@ class JetPac {
             }
         }
         this.Draw();
+        requestAnimationFrame(this.Update.bind(this));
     }
 
     private Draw(): void {
@@ -524,24 +516,16 @@ class JetPac {
             this.ctx.fillText("Press left Ctrl to fire.", 40, 560);
         }
         else {
+            var __this = this;
 
-            for (var j = 0; j < 40; j++) {
-                this.stars[j].Draw(this.ctx);
-            }
-
-            for (var i = 0; i < this.bullets.length; i++) {
-                this.bullets[i].Draw(this.ctx);
-            }
-
-            for (var j = 0; j < 10; j++) {
-                this.meteors[j].Draw(this.ctx);
-            }
-
-            for (var j = 0; j < this.explosionList.length; j++) {
-                if (!this.explosionList[j].AnimationComplete) {
-                    this.explosionList[j].Draw(this.ctx);
+            this.stars.forEach(function(star) {star.Draw(__this.ctx)});
+            this.bullets.forEach(function(bullet) {bullet.Draw(__this.ctx)});
+            this.meteors.forEach(function(meteor) {meteor.Draw(__this.ctx)});
+            this.explosionList.forEach(function(exploded) {
+                if (!exploded.AnimationComplete) {
+                    exploded.Draw(__this.ctx);
                 }
-            }
+            });
 
             if (this.rocketAssembled) {
                 this.fuelCell.Draw(this.ctx);
@@ -557,10 +541,7 @@ class JetPac {
             this.ctx.drawImage(this.floor, this.floorX, this.floorY);
 
             if (this.showParticles) {
-                for (var j = 0; j < 40; j++) {
-
-                    this.part[j].DrawParticle(this.ctx, false);
-                }
+                this.part.forEach(function(particle) {particle.DrawParticle(__this.ctx, false)});
             }
 
             if (!this.facingLeft) {
@@ -609,7 +590,7 @@ class JetPac {
     }
 
     private Rocket(): void {
-        if (this.pickedUpFirstPiece == true) {
+        if (this.pickedUpFirstPiece) {
             if (this.x != 422) {
                 this.rocket2X = this.x;
                 this.rocket2Y = this.y;
@@ -660,15 +641,15 @@ class JetPac {
 
         if (this.rocket1Y <= -100 && this.fullTank) {
             this.level++;
-            this.alienReset = true;
             this.meteor = (this.meteor + 1) % 8;
             this.fuelCell.Reset();
             this.extras.Reset();
 
-            for (var i = 0; i < this.meteors.length; i++) {
-                this.meteors[i].Frame = this.meteor;
-                this.meteors[i].Reset();
-            }
+            var __this = this;
+            this.meteors.forEach(function(meteor) {
+                meteor.Frame = __this.meteor;
+                meteor.Reset();
+            });
 
             this.fuelLevel = 0;
             this.fullTank = false;

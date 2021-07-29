@@ -38,7 +38,7 @@ class Fuel extends Base {
             this.m_y += 1;
         }
 
-        if (collided == true && this.m_x != 430) {
+        if (collided && this.m_x != 430) {
             this.m_x = x;
             this.m_y = y + 20;
         }

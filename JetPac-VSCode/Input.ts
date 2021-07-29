@@ -1,10 +1,10 @@
 ﻿class InputControls {
 
-    private m_left: boolean;			// true if left control held
-    private m_right: boolean;			// true if right control held
-    private m_up: boolean;				// true if up control held
-    private m_down: boolean;			// true if down control held
-    private m_fire: boolean;			// true if fire control held
+    private m_left: boolean;
+    private m_right: boolean;
+    private m_up: boolean;
+    private m_down: boolean;
+    private m_fire: boolean;
 
     constructor() {
         this.m_left = false;
