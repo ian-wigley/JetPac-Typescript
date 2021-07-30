@@ -42,6 +42,7 @@ class JetPac {
     private fuelCell: Fuel;
     private extras: Bonus;
 
+    private paddedScore: string = "";
     private score: number = 0;
     private lives: number = 3;
     private currentFrame: number = 0;
@@ -256,6 +257,8 @@ class JetPac {
 
         if (this.gameOn) {
 
+            var __this = this;
+
             if (this.m_ctrl.fire) {
                 var b: Bullet = new Bullet(this.bullet, this.x, this.y, this.facingLeft);
                 this.bullets.push(b);
@@ -320,19 +323,13 @@ class JetPac {
             }
 
             var mainSpritesRect: Rectangle = new Rectangle(this.x, this.y, this.spriteWidth, this.spriteHeight);
-
             var collectRocketRect2: Rectangle = new Rectangle(this.rocket2X, this.rocket2Y, this.rocketWidth, this.rocketHeight);
             var collectRocketRect3: Rectangle = new Rectangle(this.rocket3X, this.rocket3Y, this.rocketWidth, this.rocketHeight);
 
             this.Rocket();
 
-            for (var j = 0; j < 40; j++) {
-                this.part[j].UpdateParticle(this.x, this.y, this.facingLeft, this.showParticles);
-            }
-
-            for (var j = 0; j < this.stars.length; j++) {
-                this.stars[j].Update();
-            }
+            this.part.forEach(function(particle) {particle.UpdateParticle(__this.x, __this.y, __this.facingLeft, __this.showParticles)});
+            this.stars.forEach(function(star) {star.Update()});
 
             for (var j = 0; j < this.meteors.length; j++) {
                 this.meteors[j].Update(mainSpritesRect);
@@ -342,7 +339,6 @@ class JetPac {
                     this.meteors[j].Reset();
                     this.meteors[j].LedgeCollision = false;
                 }
-
 
                 if (this.meteors[j].JetManCollision) {
                     this.lives -= 1;
@@ -358,6 +354,7 @@ class JetPac {
                         this.explosionList.push(new Explosion(this.explosion, this.meteors[j].X, this.meteors[j].Y));
                         this.meteors[j].Reset();
                         this.score += 100;
+                        this.UpdateScore();
                     }
                     else {
                         temp.push(this.bullets[i]);
@@ -368,22 +365,22 @@ class JetPac {
             }
 
             temp = [];
-            for (var j = 0; j < this.explosionList.length; j++) {
-                if (!this.explosionList[j].AnimationComplete) {
-                    this.explosionList[j].Update();
-                    temp.push(this.explosionList[j]);
+            this.explosionList.forEach(function(exploded) {
+                if (!exploded.AnimationComplete) {
+                    exploded.Update();
+                    temp.push(exploded);
                 }
-            }
+            });
             this.explosionList = [];
             this.explosionList = temp;
 
             temp = [];
-            for (var i = 0; i < this.bullets.length; i++) {
-                if (!this.bullets[i].Offscreen) {
-                    this.bullets[i].Update();
-                    temp.push(this.bullets[i]);
+            this.bullets.forEach(function(bullet) {
+                if (!bullet.Offscreen) {
+                    bullet.Update();
+                    temp.push(bullet);
                 }
-            }
+            });
             this.bullets = [];
             this.bullets = temp;
 
@@ -490,6 +487,7 @@ class JetPac {
 
             if (mainSpritesRect.Intersects(this.extras.Rectangle)) {
                 this.score += 100;
+                this.UpdateScore();
                 this.extras.Reset();
                 this.extras.ResetBonus = false;
             }
@@ -517,7 +515,6 @@ class JetPac {
         }
         else {
             var __this = this;
-
             this.stars.forEach(function(star) {star.Draw(__this.ctx)});
             this.bullets.forEach(function(bullet) {bullet.Draw(__this.ctx)});
             this.meteors.forEach(function(meteor) {meteor.Draw(__this.ctx)});
@@ -553,24 +550,24 @@ class JetPac {
 
             this.ctx.font = "12px Arial";
             this.ctx.fillStyle = "yellow";
-
-            if (this.score == 0) {
-                this.ctx.fillText("SCORE : 000" + this.score, 10, 10);
-            }
-            else if (this.score >= 10 && this.score < 100) {
-                this.ctx.fillText("SCORE : 00" + this.score, 10, 10);
-            }
-            else {
-                this.ctx.fillText("SCORE : 0" + this.score, 10, 10);
-            }
+            this.ctx.fillText("SCORE : " + this.paddedScore, 10, 10);
             this.ctx.fillText("FUEL : " + this.fuelLevel + "%", 350, 10);
             this.ctx.fillText("LIVES : " + this.lives, 700, 10);
         }
     }
 
+    private UpdateScore(): void {
+        this.paddedScore = this.score.toString().padStart(5, '0');
+    }
+
     private ResetGame(): void {
         this.lives = 3;
         this.score = 0;
+        this.UpdateScore();
+        this.meteor = 0;
+        this.ResetMeteors();
+        this.fuelCell.Reset();
+        this.extras.Reset();
         this.rocketAssembled = false;
         this.lowerFirstPiece = false;
         this.deliveredFirstPiece = false;
@@ -587,6 +584,14 @@ class JetPac {
         this.rocket3X = 510;
         this.rocket3Y = 75;
         this.fuelCell.ResetLevel = 0;
+    }
+
+    private ResetMeteors(): void {
+        var __this = this;
+        this.meteors.forEach(function(meteor) {
+            meteor.Frame = __this.meteor;
+            meteor.Reset();
+        });
     }
 
     private Rocket(): void {
@@ -607,6 +612,7 @@ class JetPac {
             this.rocket2Y++;
             if (this.rocket2Y == 384) {
                 this.score += 100;
+                this.UpdateScore();
                 this.getNextPiece = true;
             }
         }
@@ -628,6 +634,7 @@ class JetPac {
             if (this.rocket3Y == 326)
             {
                 this.score += 100;
+                this.UpdateScore();
                 this.rocketAssembled = true;
             }
         }
@@ -644,13 +651,7 @@ class JetPac {
             this.meteor = (this.meteor + 1) % 8;
             this.fuelCell.Reset();
             this.extras.Reset();
-
-            var __this = this;
-            this.meteors.forEach(function(meteor) {
-                meteor.Frame = __this.meteor;
-                meteor.Reset();
-            });
-
+            this.ResetMeteors();
             this.fuelLevel = 0;
             this.fullTank = false;
 

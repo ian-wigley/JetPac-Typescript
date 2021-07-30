@@ -72,6 +72,7 @@ class Fuel extends Base {
 
     public set ResetLevel(value: number) {
         this.fuelLevel = value;
+        this.fuelCellLanded = false;
     }
 }
 
