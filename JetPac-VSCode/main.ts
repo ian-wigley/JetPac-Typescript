@@ -1,6 +1,6 @@
 ﻿require(["out\\JetPac.js"], function (JetPac) {
-    var jetpac = new JetPac();
-    jetpac.Run();
+    let jetpac = new JetPac();
+    jetpac.run();
 });
 
 require.config({

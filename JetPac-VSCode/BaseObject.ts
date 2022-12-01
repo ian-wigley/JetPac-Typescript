@@ -14,9 +14,6 @@
         this.m_frame = 0;
     }
 
-    public Draw(ctx): void {
-    }
-
     public Reset(): void {
         this.m_x = Math.floor(Math.random() * 800);
         this.m_y = -30;

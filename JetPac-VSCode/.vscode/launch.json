@@ -5,13 +5,14 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "type": "pwa-msedge",
+        "type": "chrome",
         "request": "launch",
-        "name": "Launch Edge against localhost",
+        "name": "Launch browser against localhost",
         "url": "http://localhost:8000/index.html",
         "webRoot": "${workspaceFolder}",
         "preLaunchTask": "tsc: build - tsconfig.json",
-        "outFiles": ["${workspaceFolder}/out/**/*.js"]
+        "outFiles": ["${workspaceFolder}/out/**/*.js"],
+        "runtimeExecutable": "stable"
       }
     ]
   }

@@ -1,74 +1,57 @@
-﻿import Base = require("./TexturedObject");
+﻿import Base = require("./BaseObject");
 
 class Particle extends Base {
 
-    lifeSpan: number = 20;
-    record: number = 0;
-    recordRocket: number = 0;
-    count:number = 0;
-    depth: number = 1.0;
-    scale_x: number;
-    scale_y: number;
-    fullTank:boolean = false;
+    private lifeSpan: number = 20;
+    private startPoint: number = 0;
+    private endPoint: number = 0;
+    private recordRocket: number = 0;
+    private count: number = 0;
+    private depth: number = 1.0;
+    private radius: number;
+    private alive = false;
+    private fullTank: boolean = false;
+    private colour: string = "";
+    private colours = ["#ffcc80", "#cc6600", "#ff0000", "#990000", "#660000"];
+    private animTimer: number = 0;
 
-    constructor(texture: HTMLImageElement) {
-        super(texture);
-        this.m_width = texture.width;
-        this.m_height = texture.height;
-        this.m_frame = 0;
-        this.scale_x = texture.width;
-        this.scale_y = texture.height;
+
+    constructor() {
+        super();
+        this.radius = 10;
     }
 
-    public UpdateParticle(x: number, y: number, facingLeft: boolean, showParticles: boolean): void {
+    public UpdateParticle(x: number, y: number, facingLeft: boolean, showParticles: boolean = true): void {
         if (showParticles) {
-            if (this.m_y < this.record) {
-                this.m_y++;
+            if (this.m_y < this.endPoint) {
+                this.animTimer += 0.1;
+                if (this.animTimer > 0.4) {
+                    this.m_y += 5;
+                    this.radius -= 0.5;
+                    console.log("y: " + this.m_y);
+                    this.animTimer = 0;
+                }
             }
-            else if (this.m_y >= this.record && !this.fullTank) {
+            else if (this.m_y >= this.endPoint && !this.fullTank && !this.alive) {
                 if (facingLeft) {
                     this.m_x = x + 20 + Math.floor(Math.random() * 10);
                 }
                 else {
                     this.m_x = x + Math.floor(Math.random() * 10);
                 }
-
-                this.record = y + 40 + this.lifeSpan;
-                this.m_y = y + 40 + Math.floor(Math.random() * 10);
-                this.scale_x = this.m_width;
-                this.scale_y = this.m_height;
+                this.alive = true;
+                // Set the point where the particle started from
+                this.startPoint = y + 40 + Math.floor(Math.random() * 15);
+                // Set the point where the particle shall end
+                this.endPoint = this.startPoint + this.lifeSpan;
+                this.m_y = this.startPoint;
+                // this.startPoint = y + 40 + this.lifeSpan;
+                // //this.m_y = y + 40 + Math.floor(Math.random() * 10);
+                // this.m_y = y + 40 + Math.floor(Math.random() * 15);
+                this.radius = 10;
             }
 
-            if (this.m_y == (this.record - 20)) {
-                this.count = 0;
-                this.depth = 1.0;
-                this.scale_x -= 1.75;
-                this.scale_y -= 1.75;
-            }
-            if (this.m_y == (this.record - 15)) {
-                this.count = 1;
-                this.depth = 0.9;
-                this.scale_x -= 1.0;
-                this.scale_y -= 1.75;
-            }
-            if (this.m_y == (this.record - 10)) {
-                this.count = 2;
-                this.depth = 0.8;
-                this.scale_x -= 1.75;
-                this.scale_y -= 1.75;
-            }
-            if (this.m_y == (this.record - 5)) {
-                this.count = 3;
-                this.depth = 0.7;
-                this.scale_x -= 1.75;
-                this.scale_y -= 1.75;
-            }
-            if (this.m_y == (this.record)) {
-                this.count = 4;
-                this.depth = 0.45;
-                this.scale_x -= 1.75;
-                this.scale_y -= 1.75;
-            }
+            this.updateParticlePosition();
         }
         else {
             this.m_x = x;
@@ -76,20 +59,66 @@ class Particle extends Base {
         }
     }
 
+    private updateParticlePosition() {
+        if (this.m_y == this.startPoint) {
+            this.colour = this.colours[0];
+        }
+        if (this.m_y == this.startPoint + 25) {
+            this.colour = this.colours[1];
+        }
+        if (this.m_y == this.startPoint + 50) {
+            this.colour = this.colours[2];
+        }
+        if (this.m_y == this.startPoint + 75) {
+            this.colour = this.colours[3];
+        }
+        if (this.m_y == this.startPoint + 100) {
+            this.colour = this.colours[4];
+        }
+
+
+
+
+        // if (this.m_y == (this.startPoint)) {
+        //     // Orange
+        //     this.updateParticleDimensions("#ffcc80");
+        // }
+        // if (this.m_y == (this.startPoint - 5)) {
+        //     // Dark Orange
+        //     this.updateParticleDimensions("#cc6600");
+        // }
+        // if (this.m_y == (this.startPoint - 10)) {
+        //     // Red 50%
+        //     this.updateParticleDimensions("#ff0000");
+        // }
+        // if (this.m_y == (this.startPoint - 15)) {
+        //     this.updateParticleDimensions("#990000");
+        // }
+        // if (this.m_y == (this.startPoint - 20)) {
+        //     this.updateParticleDimensions("#660000");
+        // }
+    }
+
+    // private updateParticleDimensions(colour: string): void {
+    //     this.colour = colour;
+    //     this.radius -= 0.5;//.75;
+    // }
+
     public DrawParticle(ctx: CanvasRenderingContext2D, takeOff: boolean): void {
         if (takeOff) {
             // TODO .. draw the particles on take off
         }
         else {
-           ctx.drawImage(this.m_texture, 0, 0, this.m_width, this.m_height, this.m_x, this.m_y, this.scale_x, this.scale_y);
 
-           if (this.scale_x < 0) {
-               this.scale_x = 0;
-           }
+            if (this.radius < 0) {
+                this.radius = 0;
+            }
 
-            ctx.fillStyle = "#FF0000";
+            ctx.fillStyle = this.colour;
+            // ctx.fillStyle = "yellow";
             ctx.beginPath();
-            ctx.arc(this.m_x, this.m_y, this.scale_x, 0, Math.PI * 2, true);
+            ctx.arc(this.m_x, this.m_y, this.radius, 0, Math.PI * 2, true);
+            //ctx.arc(this.m_x, this.m_y, 20, 0, Math.PI * 2, true);
             ctx.fill();
         }
     }

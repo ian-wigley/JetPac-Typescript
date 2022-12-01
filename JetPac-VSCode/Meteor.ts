@@ -74,7 +74,6 @@ class Meteor extends Base {
         this.meteorCrashed = value;
     }
 
-
     public get JetManCollision() {
         return this.meteorHitJetman;
     }

@@ -7,13 +7,28 @@
     private m_width: number;
     private m_height: number;
 
-    constructor(left: number, top: number, right: number, bottom: number) {
-        this.m_left = left;
-        this.m_top = top;
-        this.m_right = right;
-        this.m_bottom = bottom;
-        this.m_width = right + left;
-        this.m_height = bottom + top;
+    private x: number;
+    private y: number;
+
+
+    // constructor(left: number, top: number, right: number, bottom: number) {
+    //     this.m_left = left;
+    //     this.m_top = top;
+    //     this.m_right = right;
+    //     this.m_bottom = bottom;
+    //     this.m_width = right + left;
+    //     this.m_height = bottom + top;
+    // }
+
+    constructor(x: number, y: number, width: number, height: number) {
+        this.x = x;
+        this.y = y;
+        this.m_width = width;
+        this.m_height = height;
+        this.m_top = y;
+        this.m_bottom = y + height;
+        this.m_left = x;
+        this.m_right = x + width;
     }
 
     public get Left(): number {
@@ -40,18 +55,18 @@
         return this.m_height;
     }
 
-    Intersects(rect: Rectangle) {
-        var t: Rectangle = this.FromLTRB(this.Left, this.Top, this.Right, this.Bottom);
-        var f: Rectangle = this.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
-
-        return t.Left < f.Right &&
-            t.Right > f.Left &&
-            t.Top < f.Bottom &&
-            t.Bottom > f.Top;
+    public Intersects(value: Rectangle): boolean {
+        if (value.x < this.x + this.Width &&
+            this.x < value.x + value.Width &&
+            value.y < this.y + this.Height) {
+            return this.y < value.y + value.Height;
+        }
+        return false;
     }
 
-    private FromLTRB(left: number, top: number, right: number, bottom: number) {
-        return new Rectangle(left, top, right + left, bottom + top);
+    public update(x: number, y: number): void {
+        this.x = x;
+        this.y = y;
     }
 }
 
