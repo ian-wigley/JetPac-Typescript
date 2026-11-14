@@ -1,4 +1,4 @@
-﻿class Rectangle {
+class Rectangle {
 
     private m_left: number;
     private m_top: number;
@@ -9,16 +9,6 @@
 
     private x: number;
     private y: number;
-
-
-    // constructor(left: number, top: number, right: number, bottom: number) {
-    //     this.m_left = left;
-    //     this.m_top = top;
-    //     this.m_right = right;
-    //     this.m_bottom = bottom;
-    //     this.m_width = right + left;
-    //     this.m_height = bottom + top;
-    // }
 
     constructor(x: number, y: number, width: number, height: number) {
         this.x = x;
